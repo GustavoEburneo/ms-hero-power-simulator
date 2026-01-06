@@ -2,9 +2,10 @@
   <main class="h-screen bg-black flex items-center justify-center">
     <video
       src="https://mapleable-vod.dn.nexoncdn.co.kr/videos/intro_bg.mp4"
-      autoplay=""
-      loop=""
-      playsinline=""
+      autoplay
+      loop
+      muted
+      playsinline
       preload="auto"
       class="relative pointer-events-none w-full h-full object-cover opacity-65"
     ></video>
