@@ -59,9 +59,19 @@
         </div>
       </div>
       <div class="text-xs p-2 bg-gray-600 text-white rounded-xl mt-2">
-        <p>Found a bug? Tell me:</p>
+        <p>
+          Found a bug? Tell me:
+          <a
+            class="text-blue-400"
+            href="https://github.com/GustavoEburneo/ms-hero-power-simulator/issues"
+          >
+            github issues
+          </a>
+        </p>
         <p>Created by: Botuca</p>
         <p>Nickname: Aipo</p>
+        <p class="mt-2">Notices:</p>
+        <p>- I'll add Honor Calc soon.</p>
       </div>
     </div>
   </main>
