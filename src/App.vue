@@ -71,8 +71,11 @@
         </p>
         <p>Created by: Botuca</p>
         <p>Nickname: Aipo</p>
-        <p class="mt-2">Notices:</p>
-        <p>- I'll add Honor Calc soon.</p>
+        <p class="mt-2">upcoming features:</p>
+        <p>- Honor calc</p>
+        <p>- Set the rarity that will pause the reroll</p>
+        <p>- Hold down the Change option button to reroll</p>
+        <p>- Info about the %</p>
       </div>
     </div>
   </main>
