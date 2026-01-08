@@ -84,7 +84,6 @@
       </div>
       <div class="text-xs p-4 bg-gray-600 text-white rounded-xl">
         <p class="mt-2">Upcoming features:</p>
-        <p>- Honor calc</p>
         <p>- Set the rarity that will pause the reroll</p>
         <p>- Hold down the Change option button to reroll</p>
         <p>- Info about the %</p>
