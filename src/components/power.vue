@@ -31,6 +31,8 @@ import PadlockLocked from "../assets/padlock-locked.svg";
 import PadlockUnlocked from "../assets/padlock-unlocked.svg";
 import { computed } from "vue";
 
+const emit = defineEmits(["onToggleBlock"]);
+
 const props = defineProps({
   rarity: Object,
   powerRandom: Object,

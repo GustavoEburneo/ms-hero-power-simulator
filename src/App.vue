@@ -9,7 +9,7 @@
       preload="auto"
       class="relative pointer-events-none w-full h-full object-cover opacity-65"
     ></video>
-    <div class="absolute">
+    <div class="absolute flex gap-2">
       <div class="w-100 bg-gray-600 rounded-xl p-3 text-[#BED844] font-bold">
         <p class="mb-1">ABILITY</p>
         <span>Stage: </span>
@@ -47,31 +47,43 @@
               type="number"
               min="1"
               max="20"
-              class="bg-white w-8 text-gray-400 text-center"
+              class="bg-white w-10 text-gray-400 text-center rounded p-1"
               v-model="abilityLevel"
             />
           </div>
+          <div>
+            <p class="mb-1 pl-1">
+              Honor cost:
+              <span class="text-[#BED844]">
+                {{ reconfigCost[abilityLevel - 1][blockedCount] }}
+              </span>
+            </p>
+            <button
+              class="bg-lime-500 px-4 py-2 rounded-md cursor-pointer hover:bg-lime-600 disabled:bg-gray-800 disabled:cursor-default"
+              :disabled="blockedCount === 6"
+              @mousedown="getRandomRarity()"
+            >
+              Change Option
+            </button>
+          </div>
+        </div>
+        <div
+          class="text-white text-sm mt-2 pt-2 border-t flex justify-between items-center"
+        >
+          <div>
+            <span>Total honor spent: </span>
+            <span class="text-[#BED844]">{{ totalHonorSpent }}</span>
+          </div>
           <button
-            class="bg-lime-500 px-4 py-2 rounded-md cursor-pointer hover:bg-lime-600"
-            @mousedown="getRandomRarity()"
+            class="px-2 py-1 bg-black rounded cursor-pointer"
+            @click="resetTotalHonorSpent"
           >
-            Change Option
+            reset
           </button>
         </div>
       </div>
-      <div class="text-xs p-2 bg-gray-600 text-white rounded-xl mt-2">
-        <p>
-          Found a bug? Tell me:
-          <a
-            class="text-blue-400"
-            href="https://github.com/GustavoEburneo/ms-hero-power-simulator/issues"
-          >
-            github issues
-          </a>
-        </p>
-        <p>Created by: Botuca</p>
-        <p>Nickname: Aipo</p>
-        <p class="mt-2">upcoming features:</p>
+      <div class="text-xs p-4 bg-gray-600 text-white rounded-xl">
+        <p class="mt-2">Upcoming features:</p>
         <p>- Honor calc</p>
         <p>- Set the rarity that will pause the reroll</p>
         <p>- Hold down the Change option button to reroll</p>
@@ -79,14 +91,17 @@
       </div>
     </div>
   </main>
+  <Footer />
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { rarities } from "./consts/rarities.js";
 import Power from "./components/power.vue";
 import { abilityLevelPercentage } from "./consts/ability-level.js";
 import { statsByRarity } from "./consts/power.js";
+import { reconfigCost } from "./consts/reconfig-cost.js";
+import Footer from "./components/footer.vue";
 
 const MAX_LINES_LENGTH = 6;
 
@@ -94,9 +109,14 @@ const abilityLevel = ref(20);
 const raritiesRandom = ref([]);
 const stage = ref(7);
 const powerRandom = ref([]);
+let totalHonorSpent = ref(0);
 
-onMounted(() => {
-  getRandomRarity();
+onMounted(() => {});
+
+const blockedCount = computed(() => {
+  return powerRandom.value.filter((power) => {
+    return power.isBlocked;
+  }).length;
 });
 
 watch(stage, (newValue, oldValue) => {
@@ -144,11 +164,18 @@ const getRandomRarity = () => {
 
         powerRandom.value[i] =
           powers[Math.floor(Math.random() * powers.length)];
-
         break;
       }
     }
   }
+
+  totalHonorSpent.value =
+    totalHonorSpent.value +
+    reconfigCost[abilityLevel.value - 1][blockedCount.value];
+};
+
+const resetTotalHonorSpent = () => {
+  totalHonorSpent.value = 0;
 };
 </script>
 
