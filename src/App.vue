@@ -1,5 +1,5 @@
 <template>
-  <main class="h-screen bg-black flex items-center justify-center">
+  <main class="h-screen bg-black flex items-center justify-center relative">
     <video
       src="https://mapleable-vod.dn.nexoncdn.co.kr/videos/intro_bg.mp4"
       autoplay
@@ -8,22 +8,44 @@
       playsinline
       preload="auto"
       class="relative pointer-events-none w-full h-full object-cover opacity-65"
-    ></video>
+    />
     <div class="absolute flex gap-2">
       <div class="w-100 bg-gray-600 rounded-xl p-3 text-[#BED844] font-bold">
-        <p class="mb-1">ABILITY</p>
-        <span>Stage: </span>
-        <input
-          type="number"
-          min="2"
-          max="7"
-          class="bg-white w-8 text-gray-400 text-center"
-          v-model="stage"
-        />
+        <p class="mb-2 pb-2 border-b border-white">ABILITY</p>
+        <div class="text-xs">
+          <div>
+            <span>Stage: </span>
+            <input
+              type="number"
+              min="2"
+              max="7"
+              class="bg-white w-8 text-gray-400 text-center rounded"
+              v-model="stage"
+            />
+          </div>
+          <div class="mt-2">
+            <span>Select one rarity to pause the reconfiguration: </span>
+            <div class="flex gap-2 mt-1">
+              <Tag
+                v-for="(rarity, index) in rarities"
+                class="cursor-pointer"
+                :rarity-label="rarity.label"
+                :rarity-tag-color="setTagColor(rarity, index)"
+                @click="onClickRaritySelect(rarity.id)"
+              />
+              <button
+                class="cursor-pointer bg-lime-500 rounded px-1 text-white hover:bg-lime-600"
+                @click="resetRaritiesSelected"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
         <div class="flex flex-col gap-1 mt-3">
           <Power
             v-for="(rarity, index) in raritiesRandom"
-            :key="rarity.id"
+            :key="index"
             :rarity="rarity"
             :power-random="powerRandom[index]"
           />
@@ -60,7 +82,7 @@
             </p>
             <button
               class="bg-lime-500 px-4 py-2 rounded-md cursor-pointer hover:bg-lime-600 disabled:bg-gray-800 disabled:cursor-default"
-              :disabled="blockedCount === 6"
+              :disabled="blockedCount === stage - 1"
               @mousedown="getRandomRarity()"
             >
               Change Option
@@ -75,10 +97,10 @@
             <span class="text-[#BED844]">{{ totalHonorSpent }}</span>
           </div>
           <button
-            class="px-2 py-1 bg-black rounded cursor-pointer"
+            class="px-2 py-1 rounded cursor-pointer bg-lime-500 text-xs hover:bg-lime-600"
             @click="resetTotalHonorSpent"
           >
-            reset
+            RESET
           </button>
         </div>
       </div>
@@ -91,6 +113,12 @@
     </div>
   </main>
   <Footer />
+  <BaseModal
+    v-if="powersBlockedBySelected.length > 0"
+    :powers="powersBlockedBySelected"
+    @close="onCloseModal"
+    @reconfigure="onReconfigure"
+  />
 </template>
 
 <script setup>
@@ -101,6 +129,8 @@ import { abilityLevelPercentage } from "./consts/ability-level.js";
 import { statsByRarity } from "./consts/power.js";
 import { reconfigCost } from "./consts/reconfig-cost.js";
 import Footer from "./components/footer.vue";
+import Tag from "./components/tag.vue";
+import BaseModal from "./components/base-modal.vue";
 
 const MAX_LINES_LENGTH = 6;
 
@@ -108,6 +138,9 @@ const abilityLevel = ref(20);
 const raritiesRandom = ref([]);
 const stage = ref(7);
 const powerRandom = ref([]);
+const raritiesSelected = ref([]);
+const powersBlockedBySelected = ref([]);
+
 let totalHonorSpent = ref(0);
 
 onMounted(() => {});
@@ -125,7 +158,39 @@ watch(stage, (newValue, oldValue) => {
   }
 });
 
-const getRandomRarity = () => {
+const onReconfigure = (ignorePause) => {
+  getRandomRarity(ignorePause);
+};
+
+const onCloseModal = () => {
+  powersBlockedBySelected.value = [];
+};
+
+const setTagColor = (rarity, index) => {
+  if (raritiesSelected.value.some((rarity) => rarity === index)) {
+    return rarity.tagColor;
+  }
+
+  return "#000";
+};
+
+const getRandomRarity = (ignorePause = false) => {
+  powersBlockedBySelected.value = [];
+
+  for (const power of powerRandom.value) {
+    if (
+      raritiesSelected.value.some((rarity) => rarity === power.rarity.key) &&
+      !power.isBlocked &&
+      !ignorePause
+    ) {
+      powersBlockedBySelected.value.push(power);
+    }
+  }
+
+  if (powersBlockedBySelected.value.length > 0) {
+    return;
+  }
+
   for (let i = 0; i < stage.value - 1; i++) {
     if (powerRandom.value[i]?.isBlocked) {
       continue;
@@ -159,6 +224,7 @@ const getRandomRarity = () => {
             valueType: stat.valueType,
             value: stat.values[selectedRarity.key],
             isBlocked: powerRandom.value[i]?.isBlocked ?? false,
+            rarity: selectedRarity,
           }));
 
         powerRandom.value[i] =
@@ -175,6 +241,16 @@ const getRandomRarity = () => {
 
 const resetTotalHonorSpent = () => {
   totalHonorSpent.value = 0;
+};
+
+const onClickRaritySelect = (id) => {
+  raritiesSelected.value = Object.entries(rarities)
+    .filter(([key, value]) => id <= value.id)
+    .map(([key]) => key);
+};
+
+const resetRaritiesSelected = () => {
+  raritiesSelected.value = [];
 };
 </script>
 
