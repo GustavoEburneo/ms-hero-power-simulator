@@ -9,7 +9,7 @@
       preload="auto"
       class="relative pointer-events-none w-full h-full object-cover opacity-65"
     />
-    <div class="absolute flex gap-2">
+    <div class="absolute flex flex-col gap-2">
       <div class="w-100 bg-gray-600 rounded-xl p-3 text-[#BED844] font-bold">
         <p class="mb-2 pb-2 border-b border-white">ABILITY</p>
         <div class="text-xs">
@@ -110,8 +110,6 @@
       </div>
       <div class="text-xs p-4 bg-gray-600 text-white rounded-xl">
         <p class="mt-2">Upcoming features:</p>
-        <p>- Set the rarity that will pause the reroll</p>
-        <p>- Hold down the Change option button to reroll</p>
         <p>- Info about the %</p>
       </div>
     </div>
