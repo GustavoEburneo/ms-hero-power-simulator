@@ -83,7 +83,11 @@
             <button
               class="bg-lime-500 px-4 py-2 rounded-md cursor-pointer hover:bg-lime-600 disabled:bg-gray-800 disabled:cursor-default"
               :disabled="blockedCount === stage - 1"
-              @mousedown="getRandomRarity()"
+              @mousedown.prevent="startHold"
+              @mouseup="stopHold"
+              @mouseleave="stopHold"
+              @touchstart.prevent="startHold"
+              @touchend="stopHold"
             >
               Change Option
             </button>
@@ -122,7 +126,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch, onBeforeUnmount } from "vue";
 import { rarities } from "./consts/rarities.js";
 import Power from "./components/power.vue";
 import { abilityLevelPercentage } from "./consts/ability-level.js";
@@ -142,6 +146,7 @@ const raritiesSelected = ref([]);
 const powersBlockedBySelected = ref([]);
 
 let totalHonorSpent = ref(0);
+let timer = null;
 
 onMounted(() => {});
 
@@ -252,6 +257,22 @@ const onClickRaritySelect = (id) => {
 const resetRaritiesSelected = () => {
   raritiesSelected.value = [];
 };
+
+function stopHold() {
+  if (!timer) return;
+  clearInterval(timer);
+  timer = null;
+  window.removeEventListener("mouseup", stopHold);
+}
+
+function startHold() {
+  if (timer) return;
+  getRandomRarity();
+  timer = setInterval(getRandomRarity, 200);
+  window.addEventListener("mouseup", stopHold);
+}
+
+onBeforeUnmount(stopHold);
 </script>
 
 <style scoped></style>
