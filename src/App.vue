@@ -77,7 +77,7 @@
             <p class="mb-1 pl-1">
               Honor cost:
               <span class="text-[#BED844]">
-                {{ reconfigCost[abilityLevel - 1][blockedCount] }}
+                {{ honorCost }}
               </span>
             </p>
             <button
@@ -152,6 +152,20 @@ const blockedCount = computed(() => {
   return powerRandom.value.filter((power) => {
     return power.isBlocked;
   }).length;
+});
+
+const honorCost = computed(() => {
+  if (abilityLevel.value <= 0) {
+    abilityLevel.value = 0;
+    return reconfigCost[abilityLevel.value][blockedCount.value];
+  }
+
+  if (abilityLevel.value > 20) {
+    abilityLevel.value = 20;
+    return reconfigCost[abilityLevel.value - 1][blockedCount.value];
+  }
+
+  return reconfigCost[abilityLevel.value - 1][blockedCount.value];
 });
 
 watch(stage, (newValue, oldValue) => {
@@ -266,7 +280,7 @@ function stopHold() {
 function startHold() {
   if (timer) return;
   getRandomRarity();
-  timer = setInterval(getRandomRarity, 200);
+  timer = setInterval(getRandomRarity, 100);
   window.addEventListener("mouseup", stopHold);
 }
 
