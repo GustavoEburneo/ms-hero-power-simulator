@@ -1,5 +1,5 @@
 <template>
-  <div class="h-fit">
+  <div class="h-fit fixed top-1 left-1">
     <button
       v-if="!showMenu"
       class="bg-gray-600 text-white text-xs rounded-xl w-fit h-7 px-2 text-center align-middle cursor-pointer"
@@ -18,14 +18,15 @@
           </caption>
           <thead>
             <tr>
-              <th class="w-20 p-1" scope="col">Level</th>
+              <th class="w-fit p-1 bg-black border" scope="col">Level</th>
               <th
                 v-for="(rarity, index) in abilityLevelPercentage[0].rarities"
                 :key="index"
-                class="w-20"
+                class="w-fit px-4 place-items-center bg-black border"
                 scope="col"
               >
                 <Tag
+                  only-initial-letter
                   :rarity-label="rarity.label"
                   :rarity-tag-color="rarities[rarity.key].tagColor"
                 />
@@ -38,10 +39,10 @@
               :key="index"
               class="even:bg-gray-800"
               :class="{
-                'bg-lime-600! font-bold': ability.level === abilityLevel,
+                'bg-lime-600! font-bold ': ability.level === abilityLevel,
               }"
             >
-              <th scope="row" class="border">
+              <th scope="row" class="border bg-black">
                 {{ ability.level }}
               </th>
               <td

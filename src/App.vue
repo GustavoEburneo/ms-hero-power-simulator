@@ -10,7 +10,6 @@
       class="relative pointer-events-none w-full h-screen object-cover opacity-65"
     />
     <div class="absolute flex flex-row gap-2">
-      <Warnings />
       <div class="w-100 bg-gray-600 rounded-xl p-3 text-[#BED844] font-bold">
         <p class="mb-2 pb-2 border-b border-white">ABILITY</p>
         <div class="text-xs">
@@ -131,7 +130,6 @@ import { reconfigCost } from "./consts/reconfig-cost.js";
 import Footer from "./components/footer.vue";
 import Tag from "./components/tag.vue";
 import BaseModal from "./components/base-modal.vue";
-import Warnings from "./components/warnings.vue";
 import ProbInfo from "./components/prob-info.vue";
 
 const MAX_LINES_LENGTH = 6;
