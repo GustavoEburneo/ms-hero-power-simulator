@@ -1,5 +1,5 @@
 <template>
-  <main class="h-screen bg-black flex items-center justify-center relative">
+  <main class="bg-black flex items-center justify-center relative">
     <video
       src="https://mapleable-vod.dn.nexoncdn.co.kr/videos/intro_bg.mp4"
       autoplay
@@ -7,9 +7,10 @@
       muted
       playsinline
       preload="auto"
-      class="relative pointer-events-none w-full h-full object-cover opacity-65"
+      class="relative pointer-events-none w-full h-screen object-cover opacity-65"
     />
-    <div class="absolute flex flex-col gap-2">
+    <div class="absolute flex flex-row gap-2">
+      <Warnings />
       <div class="w-100 bg-gray-600 rounded-xl p-3 text-[#BED844] font-bold">
         <p class="mb-2 pb-2 border-b border-white">ABILITY</p>
         <div class="text-xs">
@@ -108,10 +109,7 @@
           </button>
         </div>
       </div>
-      <div class="text-xs p-4 bg-gray-600 text-white rounded-xl">
-        <p class="mt-2">Upcoming features:</p>
-        <p>- Info about the %</p>
-      </div>
+      <ProbInfo :ability-level="abilityLevel" />
     </div>
   </main>
   <Footer />
@@ -133,6 +131,8 @@ import { reconfigCost } from "./consts/reconfig-cost.js";
 import Footer from "./components/footer.vue";
 import Tag from "./components/tag.vue";
 import BaseModal from "./components/base-modal.vue";
+import Warnings from "./components/warnings.vue";
+import ProbInfo from "./components/prob-info.vue";
 
 const MAX_LINES_LENGTH = 6;
 
@@ -280,7 +280,7 @@ function stopHold() {
 function startHold() {
   if (timer) return;
   getRandomRarity();
-  timer = setInterval(getRandomRarity, 100);
+  timer = setInterval(getRandomRarity, 300);
   window.addEventListener("mouseup", stopHold);
 }
 
