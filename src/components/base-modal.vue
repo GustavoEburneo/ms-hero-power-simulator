@@ -40,7 +40,7 @@
               Cancel
             </button>
             <button
-              class="bg-lime-500 p-2 rounded-xl w-24 border border-black px-2 cursor-pointer"
+              class="bg-lime-600 p-2 rounded-xl w-24 border border-black px-2 cursor-pointer"
               @click="onReconfigure"
             >
               Reconfigure

@@ -9,39 +9,13 @@
       preload="auto"
       class="relative pointer-events-none w-full h-screen object-cover opacity-65"
     />
-    <div class="absolute flex flex-row gap-2">
+
+    <div class="absolute">
       <div class="w-100 bg-gray-600 rounded-xl p-3 text-[#BED844] font-bold">
         <p class="mb-2 pb-2 border-b border-white">ABILITY</p>
-        <div class="text-xs">
-          <div>
-            <span>Stage: </span>
-            <input
-              type="number"
-              min="2"
-              max="7"
-              class="bg-white w-8 text-gray-400 text-center rounded"
-              v-model="stage"
-            />
-          </div>
-          <div class="mt-2">
-            <span>Select one rarity to pause the reconfiguration: </span>
-            <div class="flex gap-2 mt-1">
-              <Tag
-                v-for="(rarity, index) in rarities"
-                class="cursor-pointer"
-                :rarity-label="rarity.label"
-                :rarity-tag-color="setTagColor(rarity, index)"
-                @click="onClickRaritySelect(rarity.id)"
-              />
-              <button
-                class="cursor-pointer bg-lime-500 rounded px-1 text-white hover:bg-lime-600"
-                @click="resetRaritiesSelected"
-              >
-                X
-              </button>
-            </div>
-          </div>
-        </div>
+
+        <Menu v-model="stage" v-model:rarities-selected="raritiesSelected" />
+
         <div class="flex flex-col gap-1 mt-3">
           <Power
             v-for="(rarity, index) in raritiesRandom"
@@ -49,50 +23,16 @@
             :rarity="rarity"
             :power-random="powerRandom[index]"
           />
-          <div
-            v-for="i in MAX_LINES_LENGTH - raritiesRandom.length"
-            :key="i"
-            class="bg-black rounded-xl p-2 flex items-center justify-center"
-          >
-            <span class="text-xs text-gray-400">
-              Unlock upon reaching Hero Power Stage
-              {{ i + raritiesRandom.length + 1 }}
-            </span>
-          </div>
+
+          <UnlockLine :rarities-random="raritiesRandom" />
         </div>
-        <div
-          class="text-white text-xs mt-1 p-2 bg-black rounded-xl flex justify-between items-center"
-        >
-          <div>
-            <span>Ability Reconfiguration Level </span>
-            <input
-              type="number"
-              min="1"
-              max="20"
-              class="bg-white w-10 text-gray-400 text-center rounded p-1"
-              v-model="abilityLevel"
-            />
-          </div>
-          <div>
-            <p class="mb-1 pl-1">
-              Honor cost:
-              <span class="text-[#BED844]">
-                {{ honorCost }}
-              </span>
-            </p>
-            <button
-              class="bg-lime-500 px-4 py-2 rounded-md cursor-pointer hover:bg-lime-600 disabled:bg-gray-800 disabled:cursor-default"
-              :disabled="blockedCount === stage - 1"
-              @mousedown.prevent="startHold"
-              @mouseup="stopHold"
-              @mouseleave="stopHold"
-              @touchstart.prevent="startHold"
-              @touchend="stopHold"
-            >
-              Change Option
-            </button>
-          </div>
-        </div>
+        <MenuBottom
+          v-model="abilityLevel"
+          :blocked-count="blockedCount"
+          :stage="stage"
+          @stop-hold="stopHold"
+          @start-hold="startHold"
+        />
         <div
           class="text-white text-sm mt-2 pt-2 border-t flex justify-between items-center"
         >
@@ -101,7 +41,7 @@
             <span class="text-[#BED844]">{{ totalHonorSpent }}</span>
           </div>
           <button
-            class="px-2 py-1 rounded cursor-pointer bg-lime-500 text-xs hover:bg-lime-600"
+            class="px-2 py-1 rounded cursor-pointer bg-lime-600 text-xs hover:bg-lime-700"
             @click="resetTotalHonorSpent"
           >
             RESET
@@ -128,11 +68,11 @@ import { abilityLevelPercentage } from "./consts/ability-level.js";
 import { statsByRarity } from "./consts/power.js";
 import { reconfigCost } from "./consts/reconfig-cost.js";
 import Footer from "./components/footer.vue";
-import Tag from "./components/tag.vue";
 import BaseModal from "./components/base-modal.vue";
 import ProbInfo from "./components/prob-info.vue";
-
-const MAX_LINES_LENGTH = 6;
+import Menu from "./components/menu.vue";
+import UnlockLine from "./components/unlock-line.vue";
+import MenuBottom from "./components/menu-bottom.vue";
 
 const abilityLevel = ref(20);
 const raritiesRandom = ref([]);
@@ -152,20 +92,6 @@ const blockedCount = computed(() => {
   }).length;
 });
 
-const honorCost = computed(() => {
-  if (abilityLevel.value <= 0) {
-    abilityLevel.value = 0;
-    return reconfigCost[abilityLevel.value][blockedCount.value];
-  }
-
-  if (abilityLevel.value > 20) {
-    abilityLevel.value = 20;
-    return reconfigCost[abilityLevel.value - 1][blockedCount.value];
-  }
-
-  return reconfigCost[abilityLevel.value - 1][blockedCount.value];
-});
-
 watch(stage, (newValue, oldValue) => {
   if (newValue < oldValue) {
     raritiesRandom.value.splice(newValue - 1, oldValue - newValue);
@@ -179,14 +105,6 @@ const onReconfigure = (ignorePause) => {
 
 const onCloseModal = () => {
   powersBlockedBySelected.value = [];
-};
-
-const setTagColor = (rarity, index) => {
-  if (raritiesSelected.value.some((rarity) => rarity === index)) {
-    return rarity.tagColor;
-  }
-
-  return "#000";
 };
 
 const getRandomRarity = (ignorePause = false) => {
@@ -256,16 +174,6 @@ const getRandomRarity = (ignorePause = false) => {
 
 const resetTotalHonorSpent = () => {
   totalHonorSpent.value = 0;
-};
-
-const onClickRaritySelect = (id) => {
-  raritiesSelected.value = Object.entries(rarities)
-    .filter(([key, value]) => id <= value.id)
-    .map(([key]) => key);
-};
-
-const resetRaritiesSelected = () => {
-  raritiesSelected.value = [];
 };
 
 function stopHold() {

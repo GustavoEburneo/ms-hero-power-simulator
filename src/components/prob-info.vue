@@ -13,16 +13,16 @@
       </button>
       <div>
         <table>
-          <caption>
+          <caption class="mb-2">
             Prob. info.
           </caption>
           <thead>
             <tr>
-              <th class="w-fit p-1 bg-black border" scope="col">Level</th>
+              <th class="w-fit p-1 bg-black rounded-tl" scope="col">Level</th>
               <th
                 v-for="(rarity, index) in abilityLevelPercentage[0].rarities"
                 :key="index"
-                class="w-fit px-4 place-items-center bg-black border"
+                class="w-fit px-4 place-items-center bg-black last:rounded-tr"
                 scope="col"
               >
                 <Tag
@@ -42,13 +42,13 @@
                 'bg-lime-600! font-bold ': ability.level === abilityLevel,
               }"
             >
-              <th scope="row" class="border bg-black">
+              <th scope="row" class="">
                 {{ ability.level }}
               </th>
               <td
                 v-for="(rarity, index) in ability.rarities"
                 :key="index"
-                class="border h-6"
+                class="h-6"
                 :class="{ 'bg-red-700': rarity.chance === 0 }"
               >
                 {{ rarity.chance }}%
