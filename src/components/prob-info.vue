@@ -2,7 +2,7 @@
   <div class="h-fit fixed top-1 left-1">
     <button
       v-if="!showMenu"
-      class="bg-gray-600 text-white text-xs rounded-xl w-fit h-7 px-2 text-center align-middle cursor-pointer"
+      class="bg-lime-600 border border-black font-bold text-white rounded-xl w-28 h-12 px-2 text-center align-middle cursor-pointer"
       @click="showMenu = true"
     >
       <span>Prob info</span>
@@ -65,7 +65,7 @@
 import { ref } from "vue";
 import { abilityLevelPercentage } from "../consts/ability-level";
 import { rarities } from "../consts/rarities";
-import Tag from "./tag.vue";
+import Tag from "./power/tag.vue";
 
 const showMenu = ref(false);
 

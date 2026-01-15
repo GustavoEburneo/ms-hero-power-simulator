@@ -9,7 +9,7 @@
         <div class="flex justify-between text-white font-bold p-1">
           <div></div>
           <span>OK</span>
-          <button class="cursor-pointer" @click="onClose">X</button>
+          <button class="cursor-pointer" @click="emit('close')">X</button>
         </div>
         <div class="bg-white">
           <div
@@ -21,7 +21,7 @@
             </p>
             <p>Reconfigure anyway?</p>
           </div>
-          <div class="bg-gray-600 h-24 p-2 m-1 rounded">
+          <div class="bg-gray-600 h-fit p-2 m-1 rounded">
             <Power
               v-for="(power, index) in powers"
               class="mb-1"
@@ -35,7 +35,7 @@
           >
             <button
               class="bg-blue-400 p-2 rounded-xl w-24 border border-black cursor-pointer"
-              @click="onClose"
+              @click="emit('close')"
             >
               Cancel
             </button>
@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import Power from "./power.vue";
+import Power from "./power/power.vue";
 
 const emit = defineEmits(["close", "reconfigure"]);
 
@@ -61,10 +61,6 @@ const props = defineProps({
   powers: Array,
   show: Boolean,
 });
-
-const onClose = () => {
-  emit("close");
-};
 
 const onReconfigure = () => {
   emit("reconfigure", true);

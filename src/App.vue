@@ -63,16 +63,18 @@
 <script setup>
 import { computed, onMounted, ref, watch, onBeforeUnmount } from "vue";
 import { rarities } from "./consts/rarities.js";
-import Power from "./components/power.vue";
 import { abilityLevelPercentage } from "./consts/ability-level.js";
 import { statsByRarity } from "./consts/power.js";
 import { reconfigCost } from "./consts/reconfig-cost.js";
-import Footer from "./components/footer.vue";
-import BaseModal from "./components/base-modal.vue";
-import ProbInfo from "./components/prob-info.vue";
-import Menu from "./components/menu.vue";
-import UnlockLine from "./components/unlock-line.vue";
-import MenuBottom from "./components/menu-bottom.vue";
+import {
+  BaseModal,
+  Footer,
+  Menu,
+  MenuBottom,
+  ProbInfo,
+  Power,
+  UnlockLine,
+} from "./components";
 
 const abilityLevel = ref(20);
 const raritiesRandom = ref([]);
@@ -99,6 +101,14 @@ watch(stage, (newValue, oldValue) => {
   }
 });
 
+const hasRaritySelectedInPower = (power, ignorePause) => {
+  return (
+    raritiesSelected.value.some((rarity) => rarity === power.rarity.key) &&
+    !power.isBlocked &&
+    !ignorePause
+  );
+};
+
 const onReconfigure = (ignorePause) => {
   getRandomRarity(ignorePause);
 };
@@ -110,66 +120,87 @@ const onCloseModal = () => {
 const getRandomRarity = (ignorePause = false) => {
   powersBlockedBySelected.value = [];
 
-  for (const power of powerRandom.value) {
-    if (
-      raritiesSelected.value.some((rarity) => rarity === power.rarity.key) &&
-      !power.isBlocked &&
-      !ignorePause
-    ) {
-      powersBlockedBySelected.value.push(power);
-    }
-  }
+  collectPowersBlockedBySelectedRarity(ignorePause);
 
   if (powersBlockedBySelected.value.length > 0) {
     return;
   }
+
+  const levelConfig = findAbilityLevel();
 
   for (let i = 0; i < stage.value - 1; i++) {
     if (powerRandom.value[i]?.isBlocked) {
       continue;
     }
 
-    const roll = Math.random() * 100;
+    const selectedRarity = pickRarityForRoll(levelConfig);
 
-    const getLevel = abilityLevelPercentage.find(
-      (ability) => ability.level === abilityLevel.value
-    );
-
-    let acc = 0;
-
-    for (const rarity of getLevel.rarities) {
-      acc += rarity.chance;
-
-      if (roll < acc) {
-        const selectedRarity = {
-          ...rarities[rarity.key],
-          key: rarity.key,
-        };
-
-        raritiesRandom.value[i] = selectedRarity;
-
-        const powers = statsByRarity
-          .filter((stat) => stat.values[selectedRarity.key])
-          .map((stat) => ({
-            id: i,
-            key: stat.key,
-            label: stat.label,
-            valueType: stat.valueType,
-            value: stat.values[selectedRarity.key],
-            isBlocked: powerRandom.value[i]?.isBlocked ?? false,
-            rarity: selectedRarity,
-          }));
-
-        powerRandom.value[i] =
-          powers[Math.floor(Math.random() * powers.length)];
-        break;
-      }
+    if (!selectedRarity) {
+      continue;
     }
+
+    raritiesRandom.value[i] = selectedRarity;
+
+    const powers = getPowersByRarity(selectedRarity).map((stat) => ({
+      id: i,
+      key: stat.key,
+      label: stat.label,
+      valueType: stat.valueType,
+      value: stat.values[selectedRarity.key],
+      isBlocked: powerRandom.value[i]?.isBlocked ?? false,
+      rarity: selectedRarity,
+    }));
+
+    powerRandom.value[i] = powers[getRandomPowerIndex(powers.length)];
   }
 
+  sumTotalHonorSpent();
+};
+
+const findAbilityLevel = () => {
+  return abilityLevelPercentage.find(
+    (ability) => ability.level === abilityLevel.value
+  );
+};
+
+const getRandomPowerIndex = (powersLength) => {
+  return Math.floor(Math.random() * powersLength);
+};
+
+const sumTotalHonorSpent = () => {
   totalHonorSpent.value =
     totalHonorSpent.value +
     reconfigCost[abilityLevel.value - 1][blockedCount.value];
+};
+
+const getPowersByRarity = (selectedRarity) => {
+  return statsByRarity.filter((stat) => stat.values[selectedRarity.key]);
+};
+
+const collectPowersBlockedBySelectedRarity = (ignorePause) => {
+  for (const power of powerRandom.value) {
+    if (hasRaritySelectedInPower(power, ignorePause)) {
+      powersBlockedBySelected.value.push(power);
+    }
+  }
+};
+
+const pickRarityForRoll = (levelConfig) => {
+  const roll = Math.random() * 100;
+  let acc = 0;
+
+  for (const rarity of levelConfig.rarities) {
+    acc += rarity.chance;
+
+    if (roll < acc) {
+      return {
+        ...rarities[rarity.key],
+        key: rarity.key,
+      };
+    }
+  }
+
+  return null;
 };
 
 const resetTotalHonorSpent = () => {
@@ -192,5 +223,3 @@ function startHold() {
 
 onBeforeUnmount(stopHold);
 </script>
-
-<style scoped></style>

@@ -33,7 +33,7 @@
 
 <script setup>
 import { rarities } from "../consts/rarities";
-import Tag from "./tag.vue";
+import Tag from "./power/tag.vue";
 
 const model = defineModel();
 const raritiesSelected = defineModel("raritiesSelected");

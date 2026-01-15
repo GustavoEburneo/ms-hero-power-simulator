@@ -27,8 +27,8 @@
 <script setup>
 import Tag from "./tag.vue";
 import Stats from "./stats.vue";
-import PadlockLocked from "../assets/padlock-locked.svg";
-import PadlockUnlocked from "../assets/padlock-unlocked.svg";
+import PadlockLocked from "../../assets/padlock-locked.svg";
+import PadlockUnlocked from "../../assets/padlock-unlocked.svg";
 import { computed } from "vue";
 
 const props = defineProps({
