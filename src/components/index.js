@@ -7,6 +7,7 @@ import MenuBottom from "./menu-bottom.vue";
 import Menu from "./menu.vue";
 import ProbInfo from "./prob-info.vue";
 import Tag from "./power/tag.vue";
+import Statistic from "./statistic.vue";
 
 export {
   BaseModal,
@@ -18,4 +19,5 @@ export {
   Stats,
   Tag,
   UnlockLine,
+  Statistic,
 };

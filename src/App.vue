@@ -33,20 +33,7 @@
           @stop-hold="stopHold"
           @start-hold="startHold"
         />
-        <div
-          class="text-white text-sm mt-2 pt-2 border-t flex justify-between items-center"
-        >
-          <div>
-            <span>Total honor spent: </span>
-            <span class="text-[#BED844]">{{ totalHonorSpent }}</span>
-          </div>
-          <button
-            class="px-2 py-1 rounded cursor-pointer bg-lime-600 text-xs hover:bg-lime-700"
-            @click="resetTotalHonorSpent"
-          >
-            RESET
-          </button>
-        </div>
+        <Statistic v-model:total-honor-spent="totalHonorSpent" />
       </div>
       <ProbInfo :ability-level="abilityLevel" />
     </div>
@@ -74,7 +61,10 @@ import {
   ProbInfo,
   Power,
   UnlockLine,
+  Statistic,
 } from "./components";
+
+const DELAY = 150;
 
 const abilityLevel = ref(20);
 const raritiesRandom = ref([]);
@@ -82,8 +72,8 @@ const stage = ref(7);
 const powerRandom = ref([]);
 const raritiesSelected = ref([]);
 const powersBlockedBySelected = ref([]);
+const totalHonorSpent = ref(0);
 
-let totalHonorSpent = ref(0);
 let timer = null;
 
 onMounted(() => {});
@@ -203,10 +193,6 @@ const pickRarityForRoll = (levelConfig) => {
   return null;
 };
 
-const resetTotalHonorSpent = () => {
-  totalHonorSpent.value = 0;
-};
-
 function stopHold() {
   if (!timer) return;
   clearInterval(timer);
@@ -217,7 +203,7 @@ function stopHold() {
 function startHold() {
   if (timer) return;
   getRandomRarity();
-  timer = setInterval(getRandomRarity, 300);
+  timer = setInterval(getRandomRarity, DELAY);
   window.addEventListener("mouseup", stopHold);
 }
 
