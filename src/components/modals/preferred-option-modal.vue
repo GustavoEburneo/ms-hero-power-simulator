@@ -122,35 +122,11 @@ import { ref } from "vue";
 import { statsByRarity } from "../../consts/power";
 import { rarities } from "../../consts/rarities";
 
-const buildInitialSelected = () => {
-  const preferredOptionsStorage = JSON.parse(
-    localStorage.getItem("preferredOptions"),
-  );
-
-  if (preferredOptionsStorage) {
-    return preferredOptionsStorage;
-  }
-
-  const initial = [];
-
-  statsByRarity.forEach((stat) => {
-    Object.entries(stat.values).forEach(([rarityKey, value]) => {
-      if (value.void) return;
-      initial.push({ stat: stat.key, index: rarityKey, value });
-    });
-  });
-
-  localStorage.setItem("preferredOptions", JSON.stringify(initial));
-
-  return initial;
-};
-
-const selected = ref(buildInitialSelected());
-
+const selected = ref([]);
 const showPreferredOptionModal = defineModel("showPreferredOptionModal");
 
 const isSelectedValue = (statKey, rarityKey) => {
-  return selected.value.some(
+  return selected.value?.some(
     (item) => item.stat === statKey && item.index === rarityKey,
   );
 };
@@ -212,7 +188,10 @@ const onClickDeselectAll = () => {
 };
 
 const onClickSaveOption = () => {
-  localStorage.setItem("preferredOptions", JSON.stringify(selected.value));
+  localStorage.setItem(
+    "preferredOptions",
+    JSON.stringify(selected.value || []),
+  );
   onClosePreferredOptionModal();
 };
 </script>

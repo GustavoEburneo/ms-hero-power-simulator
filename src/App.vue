@@ -155,7 +155,7 @@ const collectPowerInPreferredOptionsStorage = (
   ignorePause,
 ) => {
   for (const power of powersRandom.value) {
-    const isPreferred = preferredOptionsStorage.some(
+    const isPreferred = preferredOptionsStorage?.some(
       (option) =>
         option.stat === power.key && option.index === power.rarity.key,
     );
