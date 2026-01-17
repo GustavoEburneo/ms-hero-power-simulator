@@ -122,7 +122,19 @@ import { ref } from "vue";
 import { statsByRarity } from "../../consts/power";
 import { rarities } from "../../consts/rarities";
 
-const selected = ref([]);
+const loadSelected = () => {
+  const preferredOptionsStorage = JSON.parse(
+    localStorage.getItem("preferredOptions"),
+  );
+
+  if (preferredOptionsStorage.length > 0) {
+    return preferredOptionsStorage;
+  } else {
+    return [];
+  }
+};
+
+const selected = ref(loadSelected());
 const showPreferredOptionModal = defineModel("showPreferredOptionModal");
 
 const isSelectedValue = (statKey, rarityKey) => {
