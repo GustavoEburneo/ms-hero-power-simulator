@@ -37,9 +37,9 @@
                   <th
                     v-for="(rarity, rarityKey) in rarities"
                     :key="rarityKey"
-                    class="py-2 mx-2 last:rounded-r-lg w-20"
+                    class="py-2 mx-2 last:rounded-r-lg w-22"
                   >
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1 mr-2">
                       <input
                         type="checkbox"
                         :checked="isColumnSelected(rarityKey)"
@@ -67,7 +67,7 @@
                   :key="index"
                   class="rounded bg-white"
                 >
-                  <th class="text-left p-2 bg-white">
+                  <th class="text-left text-[10px] p-2 bg-white">
                     {{ stat.label }}
                   </th>
                   <td v-for="(value, index) in stat.values" :key="index">
