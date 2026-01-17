@@ -14,14 +14,14 @@
       <div class="w-100 bg-gray-600 rounded-xl p-3 text-[#BED844] font-bold">
         <p class="mb-2 pb-2 border-b border-white">ABILITY</p>
 
-        <Menu v-model="stage" v-model:rarities-selected="raritiesSelected" />
+        <Menu v-model="stage" />
 
         <div class="flex flex-col gap-1 mt-3">
           <Power
             v-for="(rarity, index) in raritiesRandom"
             :key="index"
             :rarity="rarity"
-            :power-random="powerRandom[index]"
+            :power-random="powersRandom[index]"
           />
 
           <UnlockLine :rarities-random="raritiesRandom" />
@@ -71,8 +71,7 @@ const DELAY = 150;
 const abilityLevel = ref(20);
 const raritiesRandom = ref([]);
 const stage = ref(7);
-const powerRandom = ref([]);
-const raritiesSelected = ref([]);
+const powersRandom = ref([]);
 const powersBlockedBySelected = ref([]);
 const totalHonorSpent = ref(0);
 
@@ -81,7 +80,7 @@ let timer = null;
 onMounted(() => {});
 
 const blockedCount = computed(() => {
-  return powerRandom.value.filter((power) => {
+  return powersRandom.value.filter((power) => {
     return power.isBlocked;
   }).length;
 });
@@ -89,16 +88,12 @@ const blockedCount = computed(() => {
 watch(stage, (newValue, oldValue) => {
   if (newValue < oldValue) {
     raritiesRandom.value.splice(newValue - 1, oldValue - newValue);
-    powerRandom.value.splice(newValue - 1, oldValue - newValue);
+    powersRandom.value.splice(newValue - 1, oldValue - newValue);
   }
 });
 
 const hasRaritySelectedInPower = (power, ignorePause) => {
-  return (
-    raritiesSelected.value.some((rarity) => rarity === power.rarity.key) &&
-    !power.isBlocked &&
-    !ignorePause
-  );
+  return !power.isBlocked && !ignorePause;
 };
 
 const onReconfigure = (ignorePause) => {
@@ -110,9 +105,11 @@ const onCloseModal = () => {
 };
 
 const getRandomRarity = (ignorePause = false) => {
+  const preferredOptionsStorage = getPreferredOptions();
+
   powersBlockedBySelected.value = [];
 
-  collectPowersBlockedBySelectedRarity(ignorePause);
+  collectPowerInPreferredOptionsStorage(preferredOptionsStorage, ignorePause);
 
   if (powersBlockedBySelected.value.length > 0) {
     return;
@@ -121,7 +118,7 @@ const getRandomRarity = (ignorePause = false) => {
   const levelConfig = findAbilityLevel();
 
   for (let i = 0; i < stage.value - 1; i++) {
-    if (powerRandom.value[i]?.isBlocked) {
+    if (powersRandom.value[i]?.isBlocked) {
       continue;
     }
 
@@ -139,14 +136,34 @@ const getRandomRarity = (ignorePause = false) => {
       label: stat.label,
       valueType: stat.valueType,
       value: stat.values[selectedRarity.key],
-      isBlocked: powerRandom.value[i]?.isBlocked ?? false,
+      isBlocked: powersRandom.value[i]?.isBlocked ?? false,
       rarity: selectedRarity,
     }));
 
-    powerRandom.value[i] = powers[getRandomPowerIndex(powers.length)];
+    powersRandom.value[i] = powers[getRandomPowerIndex(powers.length)];
   }
 
   sumTotalHonorSpent();
+};
+
+const getPreferredOptions = () => {
+  return JSON.parse(localStorage.getItem("preferredOptions"));
+};
+
+const collectPowerInPreferredOptionsStorage = (
+  preferredOptionsStorage,
+  ignorePause,
+) => {
+  for (const power of powersRandom.value) {
+    const isPreferred = preferredOptionsStorage.some(
+      (option) =>
+        option.stat === power.key && option.index === power.rarity.key,
+    );
+
+    if (isPreferred && hasRaritySelectedInPower(power, ignorePause)) {
+      powersBlockedBySelected.value.push(power);
+    }
+  }
 };
 
 const findAbilityLevel = () => {
@@ -167,14 +184,6 @@ const sumTotalHonorSpent = () => {
 
 const getPowersByRarity = (selectedRarity) => {
   return statsByRarity.filter((stat) => !stat.values[selectedRarity.key].void);
-};
-
-const collectPowersBlockedBySelectedRarity = (ignorePause) => {
-  for (const power of powerRandom.value) {
-    if (hasRaritySelectedInPower(power, ignorePause)) {
-      powersBlockedBySelected.value.push(power);
-    }
-  }
 };
 
 const pickRarityForRoll = (levelConfig) => {
