@@ -2,16 +2,14 @@
   <div
     class="text-white text-xs mt-1 p-2 bg-black rounded-xl flex justify-between items-center"
   >
-    <div>
-      <span>Ability Reconfiguration Level </span>
-      <input
-        type="number"
-        min="1"
-        max="20"
-        class="bg-white w-10 text-gray-400 text-center rounded p-1"
-        v-model="abilityLevel"
-      />
-    </div>
+    <span> Ability Reconfiguration Level </span>
+    <input
+      type="number"
+      min="1"
+      max="20"
+      class="bg-white w-10 text-gray-400 text-center rounded p-1"
+      v-model="abilityLevel"
+    />
     <div>
       <p class="mb-1 pl-1">
         Honor cost:
@@ -31,14 +29,30 @@
         Change Option
       </button>
     </div>
+
+    <PreferredOptionModal
+      v-if="showPreferredOptionModal"
+      v-model:show-preferred-option-modal="showPreferredOptionModal"
+    />
+  </div>
+
+  <div class="flex justify-end">
+    <button
+      class="bg-blue-400 rounded-lg w-fit cursor-pointer text-white text-xs p-2 mt-2"
+      @click="onOpenPreferredOptionModal"
+    >
+      Select Preferred Option
+    </button>
   </div>
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount } from "vue";
+import { computed, ref } from "vue";
+import { PreferredOptionModal } from "../components";
 import { reconfigCost } from "../consts/reconfig-cost";
 
 const abilityLevel = defineModel();
+const showPreferredOptionModal = ref(false);
 
 const emit = defineEmits(["start-hold", "stop-hold"]);
 
@@ -60,4 +74,8 @@ const honorCost = computed(() => {
 
   return reconfigCost[abilityLevel.value - 1][props.blockedCount];
 });
+
+const onOpenPreferredOptionModal = () => {
+  showPreferredOptionModal.value = true;
+};
 </script>

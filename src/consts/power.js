@@ -81,6 +81,7 @@ export const statsByRarity = [
     key: "DAMAGE",
     label: "Damage",
     values: {
+      NORMAL: { void: "-" },
       RARE: { min: 3, max: 5 },
       EPIC: { min: 7, max: 10 },
       UNIQUE: { min: 12, max: 15 },
@@ -93,6 +94,7 @@ export const statsByRarity = [
     label: "Debuff Tolerance",
     valueType: "FLAT",
     values: {
+      NORMAL: { void: "-" },
       RARE: { min: 4, max: 5 },
       EPIC: { min: 6, max: 8 },
       UNIQUE: { min: 10, max: 12 },
@@ -104,6 +106,8 @@ export const statsByRarity = [
     key: "MIN_DAMAGE_MULT",
     label: "Min Damage Multiplier",
     values: {
+      NORMAL: { void: "-" },
+      RARE: { void: "-" },
       EPIC: { min: 7, max: 10 },
       UNIQUE: { min: 12, max: 15 },
       LEGENDARY: { min: 18, max: 25 },
@@ -114,6 +118,8 @@ export const statsByRarity = [
     key: "MAX_DAMAGE_MULT",
     label: "Max Damage Multiplier",
     values: {
+      NORMAL: { void: "-" },
+      RARE: { void: "-" },
       EPIC: { min: 7, max: 10 },
       UNIQUE: { min: 12, max: 15 },
       LEGENDARY: { min: 18, max: 25 },
@@ -124,6 +130,8 @@ export const statsByRarity = [
     key: "CRIT_RATE",
     label: "Critical Rate",
     values: {
+      NORMAL: { void: "-" },
+      RARE: { void: "-" },
       EPIC: { min: 3, max: 6 },
       UNIQUE: { min: 7, max: 9 },
       LEGENDARY: { min: 10, max: 14 },
@@ -134,6 +142,8 @@ export const statsByRarity = [
     key: "CRIT_RESIST",
     label: "Critical Resistance",
     values: {
+      NORMAL: { void: "-" },
+      RARE: { void: "-" },
       EPIC: { min: 4.5, max: 9 },
       UNIQUE: { min: 10.5, max: 13.5 },
       LEGENDARY: { min: 15, max: 21 },
@@ -144,6 +154,9 @@ export const statsByRarity = [
     key: "ATTACK_SPEED",
     label: "Attack Speed",
     values: {
+      NORMAL: { void: "-" },
+      RARE: { void: "-" },
+      EPIC: { void: "-" },
       UNIQUE: { min: 7, max: 9 },
       LEGENDARY: { min: 10, max: 14 },
       MYSTIC: { min: 15, max: 20 },
@@ -153,6 +166,9 @@ export const statsByRarity = [
     key: "DAMAGE_TAKEN_DECREASE",
     label: "Damage Taken Decrease",
     values: {
+      NORMAL: { void: "-" },
+      RARE: { void: "-" },
+      EPIC: { void: "-" },
       UNIQUE: { min: 2, max: 3 },
       LEGENDARY: { min: 4, max: 6 },
       MYSTIC: { min: 7, max: 10 },
@@ -162,6 +178,10 @@ export const statsByRarity = [
     key: "MESO_DROP",
     label: "Meso Drop",
     values: {
+      NORMAL: { void: "-" },
+      RARE: { void: "-" },
+      EPIC: { void: "-" },
+      UNIQUE: { void: "-" },
       LEGENDARY: { min: 5, max: 8 },
       MYSTIC: { min: 9, max: 15 },
     },
@@ -170,6 +190,10 @@ export const statsByRarity = [
     key: "EXP_GAIN",
     label: "EXP Gain",
     values: {
+      NORMAL: { void: "-" },
+      RARE: { void: "-" },
+      EPIC: { void: "-" },
+      UNIQUE: { void: "-" },
       LEGENDARY: { min: 5, max: 8 },
       MYSTIC: { min: 9, max: 15 },
     },
@@ -178,6 +202,10 @@ export const statsByRarity = [
     key: "DEFENSE_PENETRATION",
     label: "Defense Penetration",
     values: {
+      NORMAL: { void: "-" },
+      RARE: { void: "-" },
+      EPIC: { void: "-" },
+      UNIQUE: { void: "-" },
       LEGENDARY: { min: 8, max: 12 },
       MYSTIC: { min: 14, max: 20 },
     },
@@ -186,6 +214,10 @@ export const statsByRarity = [
     key: "BOSS_DAMAGE",
     label: "Boss Monster Damage",
     values: {
+      NORMAL: { void: "-" },
+      RARE: { void: "-" },
+      EPIC: { void: "-" },
+      UNIQUE: { void: "-" },
       LEGENDARY: { min: 18, max: 25 },
       MYSTIC: { min: 28, max: 40 },
     },
@@ -194,6 +226,10 @@ export const statsByRarity = [
     key: "NORMAL_MONSTER_DAMAGE",
     label: "Normal Monster Damage",
     values: {
+      NORMAL: { void: "-" },
+      RARE: { void: "-" },
+      EPIC: { void: "-" },
+      UNIQUE: { void: "-" },
       LEGENDARY: { min: 18, max: 25 },
       MYSTIC: { min: 28, max: 40 },
     },

@@ -1,7 +1,8 @@
 import Power from "./power/power.vue";
 import Stats from "./power/stats.vue";
 import UnlockLine from "./power/unlock-line.vue";
-import BaseModal from "./base-modal.vue";
+import ReconfigModal from "./modals/reconfig-modal.vue";
+import PreferredOptionModal from "./modals/preferred-option-modal.vue";
 import Footer from "./footer.vue";
 import MenuBottom from "./menu-bottom.vue";
 import Menu from "./menu.vue";
@@ -10,7 +11,8 @@ import Tag from "./power/tag.vue";
 import Statistic from "./statistic.vue";
 
 export {
-  BaseModal,
+  ReconfigModal,
+  PreferredOptionModal,
   Footer,
   Menu,
   MenuBottom,

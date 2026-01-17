@@ -39,12 +39,13 @@
     </div>
   </main>
   <Footer />
-  <BaseModal
+  <ReconfigModal
     v-if="powersBlockedBySelected.length > 0"
     :powers="powersBlockedBySelected"
     @close="onCloseModal"
     @reconfigure="onReconfigure"
   />
+  <PreferredOptionModal v-if="false" />
 </template>
 
 <script setup>
@@ -54,7 +55,7 @@ import { abilityLevelPercentage } from "./consts/ability-level.js";
 import { statsByRarity } from "./consts/power.js";
 import { reconfigCost } from "./consts/reconfig-cost.js";
 import {
-  BaseModal,
+  ReconfigModal,
   Footer,
   Menu,
   MenuBottom,
@@ -62,6 +63,7 @@ import {
   Power,
   UnlockLine,
   Statistic,
+  PreferredOptionModal,
 } from "./components";
 
 const DELAY = 150;
@@ -149,7 +151,7 @@ const getRandomRarity = (ignorePause = false) => {
 
 const findAbilityLevel = () => {
   return abilityLevelPercentage.find(
-    (ability) => ability.level === abilityLevel.value
+    (ability) => ability.level === abilityLevel.value,
   );
 };
 
@@ -164,7 +166,7 @@ const sumTotalHonorSpent = () => {
 };
 
 const getPowersByRarity = (selectedRarity) => {
-  return statsByRarity.filter((stat) => stat.values[selectedRarity.key]);
+  return statsByRarity.filter((stat) => !stat.values[selectedRarity.key].void);
 };
 
 const collectPowersBlockedBySelectedRarity = (ignorePause) => {

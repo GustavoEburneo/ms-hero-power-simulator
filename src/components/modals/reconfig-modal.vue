@@ -53,13 +53,12 @@
 </template>
 
 <script setup>
-import Power from "./power/power.vue";
+import Power from "../power/power.vue";
 
 const emit = defineEmits(["close", "reconfigure"]);
 
 const props = defineProps({
   powers: Array,
-  show: Boolean,
 });
 
 const onReconfigure = () => {
