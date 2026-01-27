@@ -84,7 +84,7 @@
                         class="text-[8px] text-left"
                         :for="`stat-${stat.key}-${index}`"
                       >
-                        {{ minMaxValue(value, stat.valueType) }}
+                        {{ minMaxValue(value, stat.flat) }}
                       </label>
                     </div>
                   </td>
@@ -127,7 +127,7 @@ const loadSelected = () => {
     localStorage.getItem("preferredOptions"),
   );
 
-  if (preferredOptionsStorage.length > 0) {
+  if (preferredOptionsStorage && preferredOptionsStorage.length > 0) {
     return preferredOptionsStorage;
   } else {
     return [];
@@ -177,22 +177,18 @@ const onClosePreferredOptionModal = () => {
   showPreferredOptionModal.value = false;
 };
 
-const minMaxValue = (value, valueType) => {
+const minMaxValue = (value, flat) => {
   if (value.void) return value.void;
 
   const min = value.min;
   const max = value.max;
   let valueTypeString = "";
 
-  if (!isValueTypeFlat(valueType)) {
+  if (!flat) {
     valueTypeString = "%";
   }
 
   return `(${min}${valueTypeString} ~ ${max}${valueTypeString})`;
-};
-
-const isValueTypeFlat = (valueType) => {
-  return valueType === "FLAT";
 };
 
 const onClickDeselectAll = () => {

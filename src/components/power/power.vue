@@ -12,7 +12,7 @@
     </div>
     <div class="flex items-center">
       <span class="text-[#4cc5c7] mr-2">
-        {{ powerValueLabel }}
+        {{ powerRandom.value.roll }}
       </span>
       <img
         v-if="!hidePadlock"
@@ -47,37 +47,12 @@ const togglePadlock = computed(() => {
 });
 
 const powerValueLabel = computed(() => {
-  if (!isValueTypeFlat()) {
-    return `${powerValue.value}%`;
+  if (!props.powerRandom.flat) {
+    return `${props.powerRandom.value.roll}%`;
   } else {
-    return powerValue.value;
+    return props.powerRandom.value.roll;
   }
 });
-
-const getRandomPowerValue = () => {
-  const min = props.powerRandom?.value.min;
-  const max = props.powerRandom?.value.max;
-
-  let randomMinMaxPercentage = null;
-  let randomMinMaxFlat = null;
-
-  if (isValueTypeFlat()) {
-    randomMinMaxFlat = Math.floor(Math.random() * (max - min + 1)) + min;
-
-    return randomMinMaxFlat;
-  } else {
-    randomMinMaxPercentage =
-      Math.round((Math.random() * (max - min) + min) * 10) / 10;
-
-    return randomMinMaxPercentage;
-  }
-};
-
-const isValueTypeFlat = () => {
-  if (props.powerRandom) {
-    return props.powerRandom.valueType === "FLAT";
-  }
-};
 
 const toggleBlock = () => {
   if (props.powerRandom) {

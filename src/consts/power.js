@@ -2,7 +2,7 @@ export const statsByRarity = [
   {
     key: "MAIN_STAT",
     label: "Main Stat",
-    valueType: "FLAT",
+    flat: true,
     values: {
       NORMAL: { min: 40, max: 60 },
       RARE: { min: 100, max: 150 },
@@ -15,7 +15,7 @@ export const statsByRarity = [
   {
     key: "MAX_HP",
     label: "Max HP",
-    valueType: "FLAT",
+    flat: true,
     values: {
       NORMAL: { min: 1200, max: 1500 },
       RARE: { min: 1800, max: 3000 },
@@ -28,7 +28,7 @@ export const statsByRarity = [
   {
     key: "MAX_MP",
     label: "Max MP",
-    valueType: "FLAT",
+    flat: true,
     values: {
       NORMAL: { min: 30, max: 40 },
       RARE: { min: 50, max: 70 },
@@ -41,7 +41,7 @@ export const statsByRarity = [
   {
     key: "ACCURACY",
     label: "Accuracy",
-    valueType: "FLAT",
+    flat: true,
     values: {
       NORMAL: { min: 2, max: 3 },
       RARE: { min: 4, max: 5 },
@@ -54,7 +54,7 @@ export const statsByRarity = [
   {
     key: "EVASION",
     label: "Evasion",
-    valueType: "FLAT",
+    flat: true,
     values: {
       NORMAL: { min: 2, max: 3 },
       RARE: { min: 4, max: 5 },
@@ -67,7 +67,7 @@ export const statsByRarity = [
   {
     key: "MP_REGEN",
     label: "MP Recovery Per Sec",
-    valueType: "FLAT",
+    flat: true,
     values: {
       NORMAL: { min: 3, max: 5 },
       RARE: { min: 6, max: 10 },
@@ -80,6 +80,7 @@ export const statsByRarity = [
   {
     key: "DAMAGE",
     label: "Damage",
+    flat: false,
     values: {
       NORMAL: { void: "-" },
       RARE: { min: 3, max: 5 },
@@ -92,7 +93,7 @@ export const statsByRarity = [
   {
     key: "DEBUFF_TOLERANCE",
     label: "Debuff Tolerance",
-    valueType: "FLAT",
+    flat: true,
     values: {
       NORMAL: { void: "-" },
       RARE: { min: 4, max: 5 },
@@ -105,6 +106,7 @@ export const statsByRarity = [
   {
     key: "MIN_DAMAGE_MULT",
     label: "Min Damage Multiplier",
+    flat: false,
     values: {
       NORMAL: { void: "-" },
       RARE: { void: "-" },
@@ -117,6 +119,7 @@ export const statsByRarity = [
   {
     key: "MAX_DAMAGE_MULT",
     label: "Max Damage Multiplier",
+    flat: false,
     values: {
       NORMAL: { void: "-" },
       RARE: { void: "-" },
@@ -129,6 +132,7 @@ export const statsByRarity = [
   {
     key: "CRIT_RATE",
     label: "Critical Rate",
+    flat: false,
     values: {
       NORMAL: { void: "-" },
       RARE: { void: "-" },
@@ -141,6 +145,7 @@ export const statsByRarity = [
   {
     key: "CRIT_RESIST",
     label: "Critical Resistance",
+    flat: false,
     values: {
       NORMAL: { void: "-" },
       RARE: { void: "-" },
@@ -153,6 +158,7 @@ export const statsByRarity = [
   {
     key: "ATTACK_SPEED",
     label: "Attack Speed",
+    flat: false,
     values: {
       NORMAL: { void: "-" },
       RARE: { void: "-" },
@@ -165,6 +171,7 @@ export const statsByRarity = [
   {
     key: "DAMAGE_TAKEN_DECREASE",
     label: "Damage Taken Decrease",
+    flat: false,
     values: {
       NORMAL: { void: "-" },
       RARE: { void: "-" },
@@ -177,6 +184,7 @@ export const statsByRarity = [
   {
     key: "MESO_DROP",
     label: "Meso Drop",
+    flat: false,
     values: {
       NORMAL: { void: "-" },
       RARE: { void: "-" },
@@ -189,6 +197,7 @@ export const statsByRarity = [
   {
     key: "EXP_GAIN",
     label: "EXP Gain",
+    flat: false,
     values: {
       NORMAL: { void: "-" },
       RARE: { void: "-" },
@@ -201,6 +210,7 @@ export const statsByRarity = [
   {
     key: "DEFENSE_PENETRATION",
     label: "Defense Penetration",
+    flat: false,
     values: {
       NORMAL: { void: "-" },
       RARE: { void: "-" },
@@ -213,6 +223,7 @@ export const statsByRarity = [
   {
     key: "BOSS_DAMAGE",
     label: "Boss Monster Damage",
+    flat: false,
     values: {
       NORMAL: { void: "-" },
       RARE: { void: "-" },
@@ -225,6 +236,7 @@ export const statsByRarity = [
   {
     key: "NORMAL_MONSTER_DAMAGE",
     label: "Normal Monster Damage",
+    flat: false,
     values: {
       NORMAL: { void: "-" },
       RARE: { void: "-" },

@@ -12,7 +12,33 @@
 
     <div class="absolute">
       <div class="w-100 bg-gray-600 rounded-xl p-3 text-[#BED844] font-bold">
-        <p class="mb-2 pb-2 border-b border-white">ABILITY</p>
+        <div
+          class="flex border-b border-white justify-between mb-2 items-center"
+        >
+          <p class="mb-2 pb-2">ABILITY</p>
+          <div>
+            <label class="text-[10px] text-white">PRESETS</label>
+            <div class="grid grid-cols-5 grid-rows-2 mb-2 gap-1">
+              <div
+                v-for="i in 10"
+                class="flex justify-center items-center gap-1"
+              >
+                <input
+                  v-model="preset"
+                  type="radio"
+                  name="preset"
+                  class="bg-black rounded hover:bg-lime-600 active:bg-red-500"
+                  :id="`preset-${i}`"
+                  :value="i"
+                  @change="onChangePreset($event.target.value)"
+                />
+                <label :for="`preset-${i}`" class="text-white text-xs">
+                  {{ i }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <Menu v-model="stage" />
 
@@ -26,6 +52,7 @@
 
           <UnlockLine :rarities-random="raritiesRandom" />
         </div>
+        {{ powersRandom.value }}
         <MenuBottom
           v-model="abilityLevel"
           :blocked-count="blockedCount"
@@ -74,10 +101,48 @@ const stage = ref(7);
 const powersRandom = ref([]);
 const powersBlockedBySelected = ref([]);
 const totalHonorSpent = ref(0);
+const preset = ref(1);
+const presets = ref([]);
 
 let timer = null;
 
-onMounted(() => {});
+const initActivePreset = () => {
+  if (!localStorage.getItem("activePreset")) {
+    localStorage.setItem("activePreset", 1);
+  } else {
+    preset.value = localStorage.getItem("activePreset");
+  }
+};
+
+const initPresets = () => {
+  if (!localStorage.getItem("presets")) {
+    localStorage.setItem(
+      "presets",
+      JSON.stringify(Array.from({ length: 10 }, () => [])),
+    );
+  } else {
+    presets.value = localStorage.getItem("presets");
+  }
+};
+
+const initPowerRandom = () => {
+  const presets = JSON.parse(localStorage.getItem("presets"));
+
+  if (presets[preset.value - 1]?.length > 0) {
+    powersRandom.value = presets[preset.value - 1];
+    console.log(presets[preset.value - 1]);
+
+    for (let i = 0; i < powersRandom.value.length; i++) {
+      raritiesRandom.value[i] = presets[preset.value - 1][i].rarity;
+    }
+  }
+};
+
+onMounted(() => {
+  initActivePreset();
+  initPresets();
+  initPowerRandom();
+});
 
 const blockedCount = computed(() => {
   return powersRandom.value.filter((power) => {
@@ -91,6 +156,21 @@ watch(stage, (newValue, oldValue) => {
     powersRandom.value.splice(newValue - 1, oldValue - newValue);
   }
 });
+
+const onChangePreset = (value) => {
+  raritiesRandom.value = [];
+  powersRandom.value = [];
+
+  localStorage.setItem("activePreset", value);
+  const presets = JSON.parse(localStorage.getItem("presets"));
+
+  for (let i = 0; i < presets[value - 1].length; i++) {
+    if (presets[preset.value - 1].length > 0) {
+      powersRandom.value[i] = presets[preset.value - 1][i];
+      raritiesRandom.value[i] = presets[preset.value - 1][i]?.rarity;
+    }
+  }
+};
 
 const hasRaritySelectedInPower = (power, ignorePause) => {
   return !power.isBlocked && !ignorePause;
@@ -134,16 +214,51 @@ const getRandomRarity = (ignorePause = false) => {
       id: i,
       key: stat.key,
       label: stat.label,
-      valueType: stat.valueType,
+      flat: stat.flat,
       value: stat.values[selectedRarity.key],
       isBlocked: powersRandom.value[i]?.isBlocked ?? false,
       rarity: selectedRarity,
     }));
 
     powersRandom.value[i] = powers[getRandomPowerIndex(powers.length)];
+    powersRandom.value[i].value.roll = new Intl.NumberFormat("pt-BR").format(
+      getRandomPowerValue(powersRandom.value[i]),
+    );
   }
 
+  setPowersRandomInPreset();
   sumTotalHonorSpent();
+};
+
+const isValueTypeFlat = (powerRandom) => {
+  if (powerRandom) {
+    return powerRandom.flat;
+  }
+};
+
+const getRandomPowerValue = (powerRandom) => {
+  const min = powerRandom?.value.min;
+  const max = powerRandom?.value.max;
+
+  let randomMinMaxPercentage = null;
+  let randomMinMaxFlat = null;
+
+  if (isValueTypeFlat(powerRandom)) {
+    randomMinMaxFlat = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    return randomMinMaxFlat;
+  } else {
+    randomMinMaxPercentage =
+      Math.round((Math.random() * (max - min) + min) * 10) / 10;
+
+    return randomMinMaxPercentage;
+  }
+};
+
+const setPowersRandomInPreset = () => {
+  let presets = JSON.parse(localStorage.getItem("presets"));
+  presets[preset.value - 1] = powersRandom.value;
+  localStorage.setItem("presets", JSON.stringify(presets));
 };
 
 const getPreferredOptions = () => {

@@ -15,18 +15,12 @@ const props = defineProps({
 const minMaxValue = computed(() => {
   const min = props.power?.value.min;
   const max = props.power?.value.max;
-  let valueType = "";
+  let flat = "";
 
-  if (!isValueTypeFlat()) {
-    valueType = "%";
+  if (!props.power.flat) {
+    flat = "%";
   }
 
-  return `(${min}${valueType} ~ ${max}${valueType})`;
+  return `(${min}${flat} ~ ${max}${flat})`;
 });
-
-const isValueTypeFlat = () => {
-  return props.power?.valueType === "FLAT";
-};
-
-onMounted(() => {});
 </script>
