@@ -12,7 +12,7 @@
     </div>
     <div class="flex items-center">
       <span class="text-[#4cc5c7] mr-2">
-        {{ powerRandom.value.roll }}
+        {{ powerValueLabel }}
       </span>
       <img
         v-if="!hidePadlock"
