@@ -12,16 +12,14 @@
 
     <div class="absolute">
       <div class="w-100 bg-gray-600 rounded-xl p-3 text-[#BED844] font-bold">
-        <div
-          class="flex border-b border-white justify-between mb-2 items-center"
-        >
+        <div class="flex border-b border-white justify-between mb-2">
           <p class="mb-2 pb-2">ABILITY</p>
           <div>
             <label class="text-[10px] text-white">PRESETS</label>
             <div class="grid grid-cols-5 grid-rows-2 mb-2 gap-1">
               <div
                 v-for="i in 10"
-                class="flex justify-center items-center gap-1"
+                class="flex justify-center items-center gap-1 w-fit"
               >
                 <input
                   v-model="preset"
@@ -130,7 +128,6 @@ const initPowerRandom = () => {
 
   if (presets[preset.value - 1]?.length > 0) {
     powersRandom.value = presets[preset.value - 1];
-    console.log(presets[preset.value - 1]);
 
     for (let i = 0; i < powersRandom.value.length; i++) {
       raritiesRandom.value[i] = presets[preset.value - 1][i].rarity;
